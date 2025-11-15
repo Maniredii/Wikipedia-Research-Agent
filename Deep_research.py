@@ -112,13 +112,17 @@ st.markdown("---")
 # Search Configuration
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    topic = st.text_input("🔍 Research Topic", placeholder="e.g., Machine Learning", label_visibility="collapsed")
+    st.markdown("**🔍 Research Topic**")
+    topic = st.text_input("Research Topic", placeholder="e.g., Machine Learning", label_visibility="collapsed")
 with col2:
-    max_urls = st.slider("📊 Sources", min_value=1, max_value=20, value=5, label_visibility="collapsed")
+    st.markdown("**📊 Number of Sources**")
+    max_urls = st.slider("Sources", min_value=1, max_value=20, value=5, label_visibility="collapsed", help="How many Wikipedia articles to retrieve (1-20)")
 with col3:
-    time_limit = st.slider("⏱️ Timeout (s)", min_value=30, max_value=300, value=120, label_visibility="collapsed")
+    st.markdown("**⏱️ Timeout (seconds)**")
+    time_limit = st.slider("Timeout", min_value=30, max_value=300, value=120, label_visibility="collapsed", help="Maximum time to wait for research (30-300 seconds)")
 with col4:
-    max_depth = st.slider("🔗 Depth", min_value=1, max_value=3, value=2, label_visibility="collapsed")
+    st.markdown("**🔗 Search Depth**")
+    max_depth = st.slider("Depth", min_value=1, max_value=3, value=2, label_visibility="collapsed", help="Search depth level (1=quick, 3=thorough)")
 
 
 def generate_summary(research_data: Dict[str, Any], query: str) -> str:

@@ -160,27 +160,289 @@ __pycache__/
 - **Docker**: Create Dockerfile with Streamlit base image
 - **Google Cloud Run**: Use Cloud Run with Streamlit container
 
-## 🛠️ Configuration
+## 🛠️ Customization Guide
 
-### Customizing LLM Models
+This section explains what you can customize in the application to fit your needs.
 
-Edit the `call_llm()` function to change models:
+### 🎨 1. UI Appearance & Theme
+
+**What you can change**: Colors, button styles, spacing, fonts
+
+**Where to edit**: `Deep_research.py` - Lines 18-40 (Custom CSS section)
+
+**Example changes**:
 
 ```python
-# OpenRouter model
-payload = {"model": "tngtech/deepseek-r1t2-chimera:free", ...}
+# Change button color gradient
+.stButton > button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  # Change these hex colors
+}
 
-# Groq model
-resp = client.chat.completions.create(model="mixtral-8x7b-32768", ...)
+# Modify metric card colors
+.metric-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  # Your custom gradient
+}
 ```
 
-Available OpenRouter models: [OpenRouter Models](https://openrouter.ai/models)
+**Quick color schemes**:
+- Blue theme: `#667eea` → `#4158D0`
+- Green theme: `#11998e` → `#38ef7d`
+- Orange theme: `#f46b45` → `#eea849`
 
-Available Groq models: [Groq Models](https://console.groq.com/docs/models)
+---
 
-### Adjusting UI Theme
+### 🤖 2. AI Models (LLM Configuration)
 
-Modify the custom CSS in the `st.markdown()` section at the top of `Deep_research.py`.
+**What you can change**: Which AI model generates summaries
+
+**Where to edit**: `Deep_research.py` - Line 169 (OpenRouter) and Line 181 (Groq)
+
+**OpenRouter model options**:
+
+```python
+# In the call_llm() function, find this line:
+payload = {"model": "tngtech/deepseek-r1t2-chimera:free", ...}
+
+# Replace with any of these:
+"openai/gpt-3.5-turbo"           # Fast, affordable
+"anthropic/claude-3-haiku"       # Balanced performance
+"meta-llama/llama-3-8b-instruct" # Open source
+"google/gemini-pro"              # Google's model
+```
+
+Browse all models: [OpenRouter Models](https://openrouter.ai/models)
+
+**Groq model options**:
+
+```python
+# Find this line:
+resp = client.chat.completions.create(model="mixtral-8x7b-32768", ...)
+
+# Replace with:
+"llama-3.1-70b-versatile"  # Most capable
+"llama-3.1-8b-instant"     # Fastest
+"gemma2-9b-it"             # Efficient
+```
+
+Browse all models: [Groq Models](https://console.groq.com/docs/models)
+
+---
+
+### 📊 3. Search Parameters (Default Values)
+
+**What you can change**: Default number of sources, timeout, depth
+
+**Where to edit**: `Deep_research.py` - Lines 68-74
+
+**Current defaults**:
+
+```python
+max_urls = st.slider("📊 Sources", min_value=1, max_value=20, value=5, ...)
+# Change value=5 to your preferred default (e.g., value=10)
+
+time_limit = st.slider("⏱️ Timeout (s)", min_value=30, max_value=300, value=120, ...)
+# Change value=120 to your preferred timeout (e.g., value=180)
+
+max_depth = st.slider("🔗 Depth", min_value=1, max_value=3, value=2, ...)
+# Change value=2 to your preferred depth (e.g., value=1)
+```
+
+**Recommended settings**:
+- Quick research: `sources=3, timeout=60, depth=1`
+- Standard research: `sources=5, timeout=120, depth=2`
+- Deep research: `sources=10, timeout=300, depth=3`
+
+---
+
+### 📝 4. Summary Length & Style
+
+**What you can change**: How detailed AI summaries are
+
+**Where to edit**: `Deep_research.py` - Line 79 (generate_summary function)
+
+**Current prompt**:
+
+```python
+{"role": "system", "content": "You are a research expert. Provide a concise, well-structured summary of the research findings in 2-3 paragraphs."}
+```
+
+**Alternative prompts**:
+
+```python
+# Detailed summary (5-7 paragraphs)
+"You are a research expert. Provide a comprehensive, detailed summary with key findings, implications, and conclusions in 5-7 paragraphs."
+
+# Bullet-point summary
+"You are a research expert. Provide a summary as bullet points highlighting the most important findings."
+
+# Executive summary
+"You are a research expert. Provide an executive summary suitable for business stakeholders in 1-2 paragraphs."
+
+# Academic style
+"You are a research expert. Provide an academic-style summary with methodology, findings, and conclusions."
+```
+
+---
+
+### 🔍 5. Wikipedia Search Behavior
+
+**What you can change**: Search parameters and content extraction
+
+**Where to edit**: `Deep_research.py` - Lines 103-150 (deep_research function)
+
+**Adjustable parameters**:
+
+```python
+# Number of search results (line 117)
+"srlimit": max_urls  # Already configurable via UI
+
+# Content length per source (line 141)
+text = page["extract"][:1200]  # Change 1200 to extract more/less text
+# Recommended: 800 (brief), 1200 (standard), 2000 (detailed)
+
+# Search language (line 113)
+search_url = "https://en.wikipedia.org/w/api.php"
+# Change 'en' to other languages: 'es', 'fr', 'de', 'ja', etc.
+```
+
+---
+
+### 📄 6. Export Formats
+
+**What you can change**: Report structure and formatting
+
+**Where to edit**: `Deep_research.py` - Lines 267-285 (Export tab)
+
+**Customize report content**:
+
+```python
+# Add custom sections to report (line 271)
+report_content = f"""# Research Report: {topic}
+
+**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+
+## Executive Summary
+{results.get('summary', 'No summary available')[:1000]}
+
+## Key Findings  # Add this section
+- Finding 1
+- Finding 2
+
+## Detailed Sources
+"""
+```
+
+**PDF customization** (lines 93-101):
+- Change page size: `pagesize=letter` → `pagesize=A4`
+- Modify colors: `colors.HexColor('#667eea')` → your color
+- Adjust fonts: `fontName='Helvetica-Bold'` → other fonts
+
+---
+
+### ⚙️ 7. Page Configuration
+
+**What you can change**: App title, icon, layout
+
+**Where to edit**: `Deep_research.py` - Line 13
+
+```python
+st.set_page_config(
+    page_title="Wikipedia Research Agent",  # Change app title
+    page_icon="📚",                         # Change emoji icon
+    layout="wide",                          # Options: "wide" or "centered"
+    initial_sidebar_state="expanded"        # Options: "expanded" or "collapsed"
+)
+```
+
+**Icon options**: Use any emoji: 🔬, 🎓, 📖, 🧠, 💡, 🔍, 📊
+
+---
+
+### 🔒 8. API Key Management
+
+**What you can change**: How API keys are loaded
+
+**Where to edit**: `Deep_research.py` - Lines 15-20
+
+**Current method**: Environment variables from `.env` file
+
+**Alternative methods**:
+
+```python
+# Option 1: Streamlit secrets (for cloud deployment)
+st.session_state.openrouter_api_key = st.secrets.get("OPENROUTER_API_KEY", "")
+
+# Option 2: Direct input (less secure, for testing only)
+# Uncomment the text_input fields in sidebar if needed
+
+# Option 3: Config file
+import json
+with open('config.json') as f:
+    config = json.load(f)
+    st.session_state.openrouter_api_key = config.get("openrouter_key", "")
+```
+
+---
+
+### 📱 9. UI Layout & Components
+
+**What you can change**: Number of columns, tab names, button labels
+
+**Where to edit**: Throughout `Deep_research.py`
+
+**Examples**:
+
+```python
+# Change number of columns (line 66)
+col1, col2, col3, col4 = st.columns(4)  # Change to 3 or 5 columns
+
+# Rename tabs (line 223)
+tab1, tab2, tab3, tab4 = st.tabs(["📚 Sources", "📊 Analysis", "💡 Summary", "⚙️ Export"])
+# Change to: ["Research", "Details", "AI Summary", "Download"]
+
+# Modify button text (line 77)
+search_button = st.button("🚀 Start Research", ...)
+# Change to: "Begin Analysis", "Search Now", etc.
+```
+
+---
+
+### 🎯 Quick Customization Checklist
+
+Use this checklist to track your customizations:
+
+- [ ] Changed color scheme to match brand
+- [ ] Updated default search parameters
+- [ ] Selected preferred AI model
+- [ ] Customized summary prompt style
+- [ ] Adjusted content extraction length
+- [ ] Modified report format
+- [ ] Changed page title and icon
+- [ ] Set up API keys properly
+- [ ] Tested all export formats
+- [ ] Updated footer/branding
+
+---
+
+### 💡 Pro Tips
+
+1. **Test changes locally** before deploying to Streamlit Cloud
+2. **Keep backups** of original code before major changes
+3. **Use version control** (Git) to track modifications
+4. **Check API costs** when changing models
+5. **Validate changes** with different search topics
+6. **Monitor performance** after customization
+
+---
+
+### 🆘 Need Help?
+
+If you're unsure about a customization:
+
+1. Check the [Streamlit Documentation](https://docs.streamlit.io/)
+2. Review [OpenRouter API Docs](https://openrouter.ai/docs)
+3. Read [Wikipedia API Guide](https://www.mediawiki.org/wiki/API:Main_page)
+4. Create an issue on GitHub with your question
 
 ## 📊 API Rate Limits
 
