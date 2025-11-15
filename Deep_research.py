@@ -540,7 +540,7 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center'>
     <p><small>📚 Wikipedia Research Agent v2.0</small></p>
-    <p><small>Made with ❤️ for Research Excellence</small></p>
+    <p><small>Made with ❤️ for Research Excellence by <strong>Manideep Reddy Eevuri</strong></small></p>
     <p style='margin-top: 20px;'>
         <a href='https://github.com/Maniredii' target='_blank' style='text-decoration: none; margin: 0 10px;'>
             <img src='https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white' alt='GitHub'>
