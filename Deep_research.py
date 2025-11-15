@@ -59,28 +59,24 @@ with st.sidebar:
     
     with st.expander("🔑 API Keys", expanded=False):
         st.markdown("**LLM API Keys** (for enhanced summaries)")
-        openrouter_key = st.text_input("OpenRouter API Key", value=st.session_state.openrouter_api_key, type="password", placeholder="sk-or-...", key="openrouter_input")
-        groq_key = st.text_input("Groq API Key (fallback)", value=st.session_state.groq_api_key, type="password", placeholder="gsk-...", key="groq_input")
+        st.info("ℹ️ API keys are loaded from environment variables (.env file)")
         
-        if openrouter_key:
-            st.session_state.openrouter_api_key = openrouter_key
-            os.environ["OPENROUTER_API_KEY"] = openrouter_key
-        if groq_key:
-            st.session_state.groq_api_key = groq_key
-            os.environ["GROQ_API_KEY"] = groq_key
-        
-        if st.button("📥 Load from environment"):
-            loaded = []
-            if os.environ.get("OPENROUTER_API_KEY"):
-                st.session_state.openrouter_api_key = os.environ.get("OPENROUTER_API_KEY")
-                loaded.append("OpenRouter")
-            if os.environ.get("GROQ_API_KEY"):
-                st.session_state.groq_api_key = os.environ.get("GROQ_API_KEY")
-                loaded.append("Groq")
-            if loaded:
-                st.success(f"✅ Loaded: {', '.join(loaded)}")
+        # Show status without revealing keys
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.session_state.openrouter_api_key:
+                st.success("✅ OpenRouter: Configured")
             else:
-                st.info("ℹ️ No keys found in environment")
+                st.warning("⚠️ OpenRouter: Not set")
+        with col2:
+            if st.session_state.groq_api_key:
+                st.success("✅ Groq: Configured")
+            else:
+                st.warning("⚠️ Groq: Not set")
+        
+        st.markdown("---")
+        st.markdown("**To configure API keys:**")
+        st.code("1. Create a .env file in the project directory\n2. Add: OPENROUTER_API_KEY=your_key_here\n3. Add: GROQ_API_KEY=your_key_here\n4. Restart the application", language="text")
 
     with st.expander("🔐 Validate Keys"):
         if st.button("✓ Validate API Keys"):
