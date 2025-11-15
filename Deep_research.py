@@ -541,5 +541,16 @@ st.markdown("""
 <div style='text-align: center'>
     <p><small>📚 Wikipedia Research Agent v2.0</small></p>
     <p><small>Made with ❤️ for Research Excellence</small></p>
+    <p style='margin-top: 20px;'>
+        <a href='https://github.com/Manirediil' target='_blank' style='text-decoration: none; margin: 0 10px;'>
+            <img src='https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white' alt='GitHub'>
+        </a>
+        <a href='https://www.linkedin.com/in/manideep-reddy-eevuri-661659268/' target='_blank' style='text-decoration: none; margin: 0 10px;'>
+            <img src='https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white' alt='LinkedIn'>
+        </a>
+        <a href='https://buymeacoffee.com/manideep' target='_blank' style='text-decoration: none; margin: 0 10px;'>
+            <img src='https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black' alt='Buy Me A Coffee'>
+        </a>
+    </p>
 </div>
 """, unsafe_allow_html=True)
